@@ -1,0 +1,33 @@
+diff --git a/node_modules/expo-av/android/src/main/java/expo/modules/av/AVManager.java b/node_modules/expo-av/android/src/main/java/expo/modules/av/AVManager.java
+--- a/node_modules/expo-av/android/src/main/java/expo/modules/av/AVManager.java
++++ b/node_modules/expo-av/android/src/main/java/expo/modules/av/AVManager.java
+@@ -708,7 +708,8 @@
+     }
+ 
+     mAudioRecorder = new MediaRecorder();
+-    mAudioRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
++    // Prefer voice-optimized source for built-in noise suppression/AGC when available.
++    mAudioRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
+ 
+     mAudioRecorder.setOutputFormat(androidOptions.getInt(RECORDING_OPTION_OUTPUT_FORMAT_KEY));
+     mAudioRecorder.setAudioEncoder(androidOptions.getInt(RECORDING_OPTION_AUDIO_ENCODER_KEY));
+diff --git a/node_modules/expo-av/ios/EXAV/EXAudioSessionManager.m b/node_modules/expo-av/ios/EXAV/EXAudioSessionManager.m
+--- a/node_modules/expo-av/ios/EXAV/EXAudioSessionManager.m
++++ b/node_modules/expo-av/ios/EXAV/EXAudioSessionManager.m
+@@ -247,6 +247,16 @@
+     return error;
+   }
+ 
++  // When recording, enable voice-optimized audio processing to reduce background noise.
++  NSString *desiredMode = [category isEqualToString:AVAudioSessionCategoryPlayAndRecord]
++    ? AVAudioSessionModeVoiceChat
++    : AVAudioSessionModeDefault;
++  [session setMode:desiredMode error:&error];
++
++  if (error) {
++    return error;
++  }
++
+   if (shouldBeActive && !_sessionIsActive) {
+     [session setActive:YES error:&error];
+     if (!error) {
