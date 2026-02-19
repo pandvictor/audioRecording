@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,10 +14,17 @@ export const ScreenTemplate = ({ children }: PropsWithChildren) => {
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
-      <View style={styles.orbOne} />
-      <View style={styles.orbTwo} />
+      <View pointerEvents="none" style={styles.orbOne} />
+      <View pointerEvents="none" style={styles.orbTwo} />
       <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-        <View style={styles.content}>{children}</View>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -31,7 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     padding: spacing.lg,
     gap: spacing.lg,
   },

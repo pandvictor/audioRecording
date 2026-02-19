@@ -8,6 +8,7 @@ import { RecordScreen } from '../screens/RecordScreen';
 import { CallsScreen } from '../screens/CallsScreen';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
+import { logEvent } from '../utils/logger';
 
 type RootTabParamList = {
   Record: undefined;
@@ -22,11 +23,24 @@ export const RootNavigator = () => {
   const handleReady = useCallback(() => {
     if (navigationRef.current) {
       DdRumReactNavigationTracking.startTrackingViews(navigationRef.current);
+      const route = navigationRef.current.getCurrentRoute();
+      if (route) {
+        logEvent('screen_view', { screen: route.name });
+      }
     }
   }, []);
 
   return (
-    <NavigationContainer ref={navigationRef} onReady={handleReady}>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={handleReady}
+      onStateChange={() => {
+        const route = navigationRef.current?.getCurrentRoute();
+        if (route) {
+          logEvent('screen_view', { screen: route.name });
+        }
+      }}
+    >
       <Tab.Navigator
         screenOptions={{
           headerShown: false,

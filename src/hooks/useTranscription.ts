@@ -14,6 +14,8 @@ const getMimeType = (uri: string) => {
       return 'audio/3gpp';
     case 'wav':
       return 'audio/wav';
+    case 'caf':
+      return 'audio/x-caf';
     case 'aac':
       return 'audio/aac';
     case 'mp3':

@@ -17,11 +17,10 @@
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Microphone access is needed to record your voice."
       },
-      "bundleIdentifier": "com.anonymous.audioRecording"
+      "bundleIdentifier": "com.victorhernandez.audioRecording"
     },
     "android": {
       "permissions": [
-        "RECORD_AUDIO",
         "RECORD_AUDIO"
       ],
       "adaptiveIcon": {
